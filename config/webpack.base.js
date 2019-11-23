@@ -1,18 +1,17 @@
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 const devMode = process.env.NODE_ENV !== 'production';
 
 module.exports = {
-	entry: [
-		'react-hot-loader/patch',
-		path.resolve(__dirname, './src/index.js')
-	],
+  resolve: {
+    extensions: ['.js', '.jsx', '.json', '.css']
+  },
 	module: {
 		rules: [
 			{
-				test: /\.js$/,
+				test: /\.(js|jsx)$/,
 				exclude: /node_modules/,
 				use: {
 					loader: 'babel-loader'
@@ -29,18 +28,20 @@ module.exports = {
 							hmr: devMode,
 						},
 					}, 'css-loader'],
+      },
+      {
+				test: /\.(jpg|png|jpeg)$/,
+				use: {
+					loader: 'url-loader',
+					options: {
+						limit: 8192,
+						name: '[name].[contenthash].[ext]'
+					}
+				}
 			},
 		],
 	},
-	devServer: {
-		hot: true,
-	},
 	plugins: [
-		new HtmlWebPackPlugin({
-			template: './src/index.html',
-			filename: './index.html'
-		}),
-		new webpack.HotModuleReplacementPlugin(),
 		new MiniCssExtractPlugin({
 			// Options similar to the same options in webpackOptions.output
 			// all options are optional
